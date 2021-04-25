@@ -1,19 +1,15 @@
-const { ApolloServer, gql } = require("apollo-server");
+const express = require("express");
+const { graphqlHTTP } = require("express-graphql");
+const rootResolver = require("./GraphQL/resolvers").rootResolver;
+const schema = require("./GraphQL/schema").schema;
+const app = express();
 
-const typeDefs = gql `
-  type Query {
-    greeting: String
-  }
-`;
-
-const resolvers = {
-  Query: {
-    greeting: () => "Hello GraphQL world!👋",
-  },
-};
-
-const app = new ApolloServer({ typeDefs, resolvers });
-
-app
-  .listen({ port: 9000 })
-  .then((serverInfo) => console.log(`Server running at ${serverInfo.url}`));
+app.use(
+  "/api",
+  graphqlHTTP({
+    schema: schema,
+    graphiql: true,
+    rootValue: rootResolver,
+  })
+);
+app.listen(5000);
