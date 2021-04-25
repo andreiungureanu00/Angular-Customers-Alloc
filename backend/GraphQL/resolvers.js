@@ -44,7 +44,7 @@ const rootResolver = {
     return null;
   },
   deleteProject: async(args) => {
-    const query = "delete from users where id = ?";
+    const query = "delete from projects where id = ?";
     const [rows, fields] = await connection.query(query, [args.id]);
     if (rows) {
       return "Project Deleted";
