@@ -6,6 +6,7 @@ const schema = graphql.buildSchema(`
     getProjects: [Project],
     getProjectInfo(id: Int!) : Project
   },
+  
   type Project {
     id: Int!,
     project_name: String,
