@@ -14,13 +14,6 @@ const schema = graphql.buildSchema(`
     description: String,
     project_code: String
   },
-  type ProjectBody {
-		project_name: String,
-    start_date: DateTime,
-    planned_end_date: DateTime,
-    description: String,
-    project_code: String
-	},
   type Mutation {
 		updateProject(id: Int, project_name: String, start_date: DateTime, planned_end_date: DateTime, description: String, project_code: String): Project,
 		deleteProject(id: Int): String,
