@@ -1,0 +1,35 @@
+.detail_container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.card h2{
+  text-align: center;
+}
+
+.card {
+  max-width: 80%;
+  width: 60%;
+  max-height: 80%;
+}
+
+.card-header {
+  display: flex;
+  align-items: center !important;
+  justify-content: space-between;
+}
+
+.detail_badge {
+  background-color: black;
+  color: white;
+  padding: 0.5vw;
+}
+
+img{
+  margin-left: 1%;
+  margin-top: 1%;
+  height: 3%;
+  width: 3%;
+  cursor: pointer;
+}

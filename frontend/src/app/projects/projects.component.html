@@ -1,11 +1,247 @@
 <div>
-  <h2>Projects</h2>
-  <ul class="projects">
-    <li *ngFor="let project of projects"
-      [class.selected]="project === selectedProject"
-      (click)="onSelect(project)">
-      <span class="badge">{{ project.id }}</span> {{ project.project_name }}
-    </li>
-  </ul>
-  <app-project-detail [project]="selectedProject" ></app-project-detail>
+  <div style="margin: 0 30px">
+    <h2 style="text-align: center">Projects</h2>
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th>Project Name</th>
+            <th>Project Start Date</th>
+            <th>Planned End Date</th>
+            <th>Description</th>
+            <th>Project Code</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <ng-container *ngFor="let project of projects">
+          <tr *ngIf="project">
+            <td
+              *ngIf="
+                !editMode ||
+                (editMode && project !== toEditProject) ||
+                editableProperty !== 'project_name'
+              "
+              (click)="setEditableProject(project, 'project_name', true)"
+            >
+              {{ project.project_name }}
+            </td>
+            <td
+              *ngIf="
+                editMode &&
+                project === toEditProject &&
+                editableProperty === 'project_name'
+              "
+            >
+              <div class="input_icons">
+                <input
+                  id="project_name_input"
+                  [(ngModel)]="project.project_name"
+                />
+                <button (click)="updateProperty(project)">Save</button>
+              </div>
+            </td>
+            <td
+              *ngIf="
+                !editMode ||
+                (editMode && project !== toEditProject) ||
+                editableProperty !== 'start_date'
+              "
+              (click)="setEditableProject(project, 'start_date', true)"
+            >
+              {{ project.start_date }}
+            </td>
+            <td
+              *ngIf="
+                editMode &&
+                project === toEditProject &&
+                editableProperty === 'start_date'
+              "
+            >
+              <div class="input_icons">
+                <input [(ngModel)]="project.start_date" />
+                <button (click)="updateProperty(project)">Save</button>
+              </div>
+            </td>
+            <td
+              *ngIf="
+                !editMode ||
+                (editMode && project !== toEditProject) ||
+                editableProperty !== 'planned_end_date'
+              "
+              (click)="setEditableProject(project, 'planned_end_date', true)"
+            >
+              {{ project.planned_end_date }}
+            </td>
+            <td
+              *ngIf="
+                editMode &&
+                project === toEditProject &&
+                editableProperty === 'planned_end_date'
+              "
+            >
+              <div class="input_icons">
+                <input [(ngModel)]="project.planned_end_date" />
+                <button (click)="updateProperty(project)">Save</button>
+              </div>
+            </td>
+            <td
+              *ngIf="
+                !editMode ||
+                (editMode && project !== toEditProject) ||
+                editableProperty !== 'description'
+              "
+              (click)="setEditableProject(project, 'description', true)"
+            >
+              {{ project.description }}
+            </td>
+            <td
+              *ngIf="
+                editMode &&
+                project === toEditProject &&
+                editableProperty === 'description'
+              "
+            >
+              <div class="input_icons">
+                <input [(ngModel)]="project.description" />
+                <button (click)="updateProperty(project)">Save</button>
+              </div>
+            </td>
+            <td
+              *ngIf="
+                !editMode ||
+                (editMode && project !== toEditProject) ||
+                editableProperty !== 'project_code'
+              "
+              (click)="setEditableProject(project, 'project_code', true)"
+            >
+              {{ project.project_code }}
+            </td>
+            <td
+              *ngIf="
+                editMode &&
+                project === toEditProject &&
+                editableProperty === 'project_code'
+              "
+            >
+              <div class="input_icons">
+                <input [(ngModel)]="project.project_code" />
+                <button (click)="updateProperty(project)">Save</button>
+              </div>
+            </td>
+            <td tabindex="7">
+              <div *ngIf="project">
+                <button
+                  class="btn btn-primary"
+                  (click)="deleteProject(project)"
+                >
+                  Delete Project
+                </button>
+                <button
+                  routerLink="/details/{{ project.id }}"
+                  class="btn btn-primary"
+                  (click)="onSelect(project)"
+                >
+                  Details
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </table>
+      <button
+        id="modal_button"
+        class="btn btn-lg btn-outline-primary"
+        (click)="open(content)"
+      >
+        Add Project
+      </button>
+      <ng-template #content let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Add a project</h4>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="project_name">Project Name</label>
+              <div class="input-group">
+                <input
+                  id="project_name"
+                  class="form-control"
+                  name="project_name"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="project_start_date">Project Start Date</label>
+              <div class="input-group">
+                <input
+                  id="project_start_date"
+                  class="form-control"
+                  name="project_start_date"
+                  placeholder="yyyy-mm-dd"
+                  name="dp"
+                  ngbDatepicker
+                  #dp="ngbDatepicker"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="project_planned_end_date"
+                >Project Planned End Date</label
+              >
+              <div class="input-group">
+                <input
+                  id="project_planned_end_date"
+                  class="form-control"
+                  name="project_planned_end_date"
+                  placeholder="yyyy-mm-dd"
+                  name="dp"
+                  ngbDatepicker
+                  #dp="ngbDatepicker"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="project_description">Project Description</label>
+              <div class="input-group">
+                <input
+                  id="project_description"
+                  class="form-control"
+                  name="project_description"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="project_code">Project Code</label>
+              <div class="input-group">
+                <input
+                  id="project_code"
+                  class="form-control"
+                  name="project_code"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline-dark"
+            (click)="addProject(); modal.dismiss('Cross click')"
+          >
+            Save
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 </div>

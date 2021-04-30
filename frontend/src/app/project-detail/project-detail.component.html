@@ -1,14 +1,34 @@
-<div *ngIf="project">
-    <h2>{{ project.project_name | uppercase }} Details</h2>
-    <div><span>id: </span>{{ project.id }}</div>
-    <div><span>Name: </span>{{ project.project_name }}</div>
-    <div><span>Code: </span>{{ project.project_code }}</div>
-    <!-- <div>
-      <label for="hero-name">Project name: </label>
-      <input
-        id="hero-name"
-        [(ngModel)]="project.project_name"
-        placeholder="name"
-      />
-    </div> -->
+<img
+  src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2Fb%2Fb1%2FBack_Arrow.svg%2F1024px-Back_Arrow.svg.png&f=1&nofb=1" (click)="goBack()"
+/>
+<div *ngIf="selectedProject" class="detail_container">
+  <div class="card">
+    <h2>Project Details</h2>
+    <div class="card-body">
+      <div class="card-header">
+        <h6 class="detail_badge">Project Name</h6>
+        <h6>{{ selectedProject.project_name }}</h6>
+        </div>
+      <br />
+      <div class="card-header">
+        <h6 class="detail_badge">Project Description</h6>
+        <h6>{{ selectedProject.description }}</h6>
+      </div>
+      <br />
+      <div class="card-header">
+        <h6 class="detail_badge">Project Start Date</h6>
+        <h6>{{ selectedProject.start_date }}</h6>
+      </div>
+      <br />
+      <div class="card-header">
+        <h6 class="detail_badge">Project Planned End Date</h6>
+        <h6>{{ selectedProject.planned_end_date }}</h6>
+      </div>
+      <br />
+      <div class="card-header">
+        <h6 class="detail_badge">Project Code</h6>
+        <h6>{{ selectedProject.project_code }}</h6>
+      </div>
+    </div>
   </div>
+</div>
