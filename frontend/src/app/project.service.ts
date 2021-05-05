@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Project, ProjectBody } from './interfaces/project';
-import { Projects } from './projects/helpers/projectsList';
 import { Observable, of } from 'rxjs';
 import { Apollo, ApolloBase, gql } from 'apollo-angular';
 import { ApolloQueryResult } from '@apollo/client/core';
-import { variable } from '@angular/compiler/src/output/output_ast';
+import { isNumber } from '@ng-bootstrap/ng-bootstrap/util/util';
 
 @Injectable({
   providedIn: 'root',
@@ -50,83 +49,108 @@ export class ProjectService {
   }
 
   addProject(project: ProjectBody): Observable<any> {
-    return this.apollo.mutate({
-      mutation: gql`
-        mutation(
-          $project_name: String
-          $start_date: DateTime
-          $planned_end_date: DateTime
-          $description: String
-          $project_code: String
-        ) {
-          addProject(
-            project_name: $project_name
-            start_date: $start_date
-            planned_end_date: $planned_end_date
-            description: $description
-            project_code: $project_code
+    if (
+      project.project_name &&
+      project.start_date &&
+      project.planned_end_date &&
+      project.project_code
+    ) {
+      return this.apollo.mutate({
+        mutation: gql`
+          mutation(
+            $project_name: String
+            $start_date: DateTime
+            $planned_end_date: DateTime
+            $description: String
+            $project_code: String
           ) {
-            id
+            addProject(
+              project_name: $project_name
+              start_date: $start_date
+              planned_end_date: $planned_end_date
+              description: $description
+              project_code: $project_code
+            ) {
+              id
+            }
           }
-        }
-      `,
-      variables: {
-        project_name: project.project_name,
-        description: project.description,
-        start_date: project.start_date,
-        planned_end_date: project.planned_end_date,
-        project_code: project.project_code,
-      },
-    });
+        `,
+        variables: {
+          project_name: project.project_name,
+          description: project.description,
+          start_date: new Date(project.start_date),
+          planned_end_date: new Date(project.planned_end_date),
+          project_code: project.project_code,
+        },
+      });
+    } else {
+      console.log('Null fields');
+    }
   }
 
   updateProject(project: Project): Observable<any> {
-    return this.apollo.mutate({
-      mutation: gql`
-        mutation(
-          $id: Int!
-          $project_name: String
-          $start_date: DateTime
-          $planned_end_date: DateTime
-          $description: String
-          $project_code: String
-        ) {
-          updateProject(
-            id: $id,
-            project_name: $project_name
-            start_date: $start_date
-            planned_end_date: $planned_end_date
-            description: $description
-            project_code: $project_code
+    if (
+      project.project_name &&
+      project.start_date &&
+      project.planned_end_date &&
+      project.project_code
+    ) {
+      return this.apollo.mutate({
+        mutation: gql`
+          mutation(
+            $id: Int!
+            $project_name: String
+            $start_date: DateTime
+            $planned_end_date: DateTime
+            $description: String
+            $project_code: String
           ) {
-            id
-            project_name
-            start_date
-            planned_end_date
-            description
-            project_code
+            updateProject(
+              id: $id
+              project_name: $project_name
+              start_date: $start_date
+              planned_end_date: $planned_end_date
+              description: $description
+              project_code: $project_code
+            ) {
+              id
+              project_name
+              start_date
+              planned_end_date
+              description
+              project_code
+            }
           }
-        }
-      `,
-      variables: {
-        id: project.id,
-        project_name: project.project_name,
-        description: project.description,
-        start_date: project.start_date,
-        planned_end_date: project.planned_end_date,
-        project_code: project.project_code,
-      },
-    });
+        `,
+        variables: {
+          id: project.id,
+          project_name: project.project_name,
+          description: project.description,
+          start_date: new Date(project.start_date),
+          planned_end_date: new Date(project.planned_end_date),
+          project_code: project.project_code,
+        },
+      });
+    }
+    else {
+      console.log('Null fields');
+    }
   }
 
   deleteProject(project: Project): Observable<any> {
-    return this.apollo.mutate({
-      mutation: gql`
+    if (project.id && Number.isInteger(project.id)) {
+      return this.apollo.mutate({
+        mutation: gql`
         mutation($projectID: Int!) {
           deleteProject(id: $projectID)
         }
       `,
-      variables: { projectID: project.id },
-    });
+        variables: { projectID: project.id },
+      });
+    }
+    else {
+      console.log("Project ID is not a number");
+    }
   }
+
 }

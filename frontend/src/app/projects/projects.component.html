@@ -49,7 +49,7 @@
               "
               (click)="setEditableProject(project, 'start_date', true)"
             >
-              {{ project.start_date }}
+              {{ project.start_date | date: "d/M/yy" }}
             </td>
             <td
               *ngIf="
@@ -59,7 +59,23 @@
               "
             >
               <div class="input_icons">
-                <input [(ngModel)]="project.start_date" />
+                <mat-form-field>
+                  <input
+                    [(ngModel)]="project.start_date"
+                    matInput
+                    [matDatepicker]="picker"
+                    placeholder="Choose a date"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker
+                    #picker
+                    startView="year"
+                    [startAt]="startDate"
+                  ></mat-datepicker>
+                </mat-form-field>
                 <button (click)="updateProperty(project)">Save</button>
               </div>
             </td>
@@ -71,7 +87,7 @@
               "
               (click)="setEditableProject(project, 'planned_end_date', true)"
             >
-              {{ project.planned_end_date }}
+              {{ project.planned_end_date | date: "d/M/yy" }}
             </td>
             <td
               *ngIf="
@@ -81,7 +97,26 @@
               "
             >
               <div class="input_icons">
-                <input [(ngModel)]="project.planned_end_date" />
+                <!-- <input [(ngModel)]="project.planned_end_date" /> -->
+
+                <mat-form-field>
+                  <input
+                    [(ngModel)]="project.planned_end_date"
+                    matInput
+                    [matDatepicker]="picker2"
+                    placeholder="Choose a date"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker2"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker
+                    #picker2
+                    startView="year"
+                    [startAt]="startDate"
+                  ></mat-datepicker>
+                </mat-form-field>
+
                 <button (click)="updateProperty(project)">Save</button>
               </div>
             </td>
@@ -157,90 +192,126 @@
         Add Project
       </button>
       <ng-template #content let-modal>
-        <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">Add a project</h4>
-          <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label for="project_name">Project Name</label>
-              <div class="input-group">
-                <input
-                  id="project_name"
-                  class="form-control"
-                  name="project_name"
-                />
+        <form ng-submit="validateProject()">
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Add a project</h4>
+            <button
+              type="button"
+              class="close"
+              aria-label="Close"
+              (click)="modal.dismiss('Cross click')"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="project_name">Project Name</label>
+                <div class="input-group">
+                  <input
+                    id="project_name"
+                    name="project_name"
+                    class="form-control"
+                    name="project_name"
+                    minlength="4"
+                    required
+                  />
+                </div>
+                <div *ngIf="inputErrors.project_name.status" id="validate_name" class="alert alert-danger" role="alert">
+                  {{inputErrors.project_name.message}}
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="project_start_date">Project Start Date</label>
-              <div class="input-group">
-                <input
-                  id="project_start_date"
-                  class="form-control"
-                  name="project_start_date"
-                  placeholder="yyyy-mm-dd"
-                  name="dp"
-                  ngbDatepicker
-                  #dp="ngbDatepicker"
-                />
+              <div class="form-group">
+                <label for="project_start_date">Project Start Date</label>
+                <div class="input-group">
+                  <input
+                    id="project_start_date"
+                    name="project_start_date"
+                    matInput
+                    [matDatepicker]="picker3"
+                    placeholder="Choose a date"
+                    required
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker3"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker
+                    #picker3
+                    startView="year"
+                    [startAt]="startDate"
+                  ></mat-datepicker>
+                </div>
+                <div id="validate_start_date" *ngIf="inputErrors.start_date.status" class="alert alert-danger" role="alert">
+                  {{inputErrors.start_date.message}}
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="project_planned_end_date"
-                >Project Planned End Date</label
-              >
-              <div class="input-group">
-                <input
-                  id="project_planned_end_date"
-                  class="form-control"
-                  name="project_planned_end_date"
-                  placeholder="yyyy-mm-dd"
-                  name="dp"
-                  ngbDatepicker
-                  #dp="ngbDatepicker"
-                />
+              <div class="form-group">
+                <label for="project_planned_end_date"
+                  >Project Planned End Date</label
+                >
+                <div class="input-group">
+                  <input
+                    id="project_planned_end_date"
+                    name="project_planned_end_date"
+                    matInput
+                    [matDatepicker]="picker4"
+                    placeholder="Choose a date"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker4"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker
+                    #picker4
+                    startView="year"
+                    [startAt]="startDate"
+                  ></mat-datepicker>
+                </div>
+                <div *ngIf="inputErrors.planned_end_date.status" id="validate_end_date" class="alert alert-danger" role="alert">
+                  {{inputErrors.planned_end_date.message}}
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="project_description">Project Description</label>
-              <div class="input-group">
-                <input
-                  id="project_description"
-                  class="form-control"
-                  name="project_description"
-                />
+              <div class="form-group">
+                <label for="project_description">Project Description</label>
+                <div class="input-group">
+                  <input
+                    id="project_description"
+                    class="form-control"
+                    name="project_description"
+                  />
+                </div>
+                <div *ngIf="inputErrors.description.status" id="validate_description" class="alert alert-danger" role="alert">
+                  {{inputErrors.description.message}}
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="project_code">Project Code</label>
-              <div class="input-group">
-                <input
-                  id="project_code"
-                  class="form-control"
-                  name="project_code"
-                />
+              <div class="form-group">
+                <label for="project_code">Project Code</label>
+                <div class="input-group">
+                  <input
+                    id="project_code"
+                    class="form-control"
+                    name="project_code"
+                  />
+                </div>
+                <div *ngIf="inputErrors.project_code.status" id="validate_code" class="alert alert-danger" role="alert">
+                  {{inputErrors.project_code.message}}
+                </div>
               </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-outline-dark"
-            (click)="addProject(); modal.dismiss('Cross click')"
-          >
-            Save
-          </button>
-        </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="submit"
+              id="submit_button"
+              class="btn btn-outline-dark"
+              (click)="validateProject(); addProject(); modal.dismiss('Cross click')"
+            >
+              Save
+            </button>
+          </div>
+        </form>
       </ng-template>
     </div>
   </div>
